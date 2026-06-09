@@ -22,7 +22,6 @@ class NtfyWidgetProvider : AppWidgetProvider() {
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        // Clean up preferences when widget is removed
         val repository = Repository.getInstance(context)
         for (appWidgetId in appWidgetIds) {
             repository.setWidgetSubscriptionId(appWidgetId, 0L)
@@ -35,6 +34,8 @@ class NtfyWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
+        private const val ACTION_CONFIGURE = "io.heckel.ntfy.WIDGET_CONFIGURE"
+
         fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
             val repository = Repository.getInstance(context)
             val views = RemoteViews(context.packageName, R.layout.widget_ntfy)
@@ -42,25 +43,27 @@ class NtfyWidgetProvider : AppWidgetProvider() {
 
             kotlinx.coroutines.runBlocking {
                 val subId = repository.getWidgetSubscriptionId(appWidgetId)
+
                 if (subId == 0L) {
-                    // No topic selected
+                    // No topic selected — show hint, tap to configure
                     views.setViewVisibility(R.id.widget_message, android.view.View.GONE)
                     views.setViewVisibility(R.id.widget_empty_text, android.view.View.VISIBLE)
+                    views.setTextViewText(R.id.widget_empty_text, context.getString(R.string.widget_no_topic_selected))
 
-                    // Tap to configure
                     val configIntent = Intent(context, NtfyWidgetConfigureActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        action = ACTION_CONFIGURE
                         putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                     }
                     val configPendingIntent = PendingIntent.getActivity(
-                        context, appWidgetId, configIntent,
+                        context, appWidgetId + 1000, configIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
                     views.setOnClickPendingIntent(R.id.widget_empty_text, configPendingIntent)
+                    views.setOnClickPendingIntent(R.id.widget_message, configPendingIntent)
                 } else {
                     val subscription = repository.getSubscription(subId)
                     if (subscription != null) {
-                        // Build full content from latest notification
                         val sb = StringBuilder()
                         if (subscription.latestTitle != null) {
                             sb.appendLine(subscription.latestTitle)
@@ -83,7 +86,6 @@ class NtfyWidgetProvider : AppWidgetProvider() {
                         val label = displayName(appBaseUrl, subscription)
                         views.setTextViewText(R.id.widget_title, label)
 
-                        // Tap content to open detail
                         val detailIntent = Intent(context, DetailActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                             putExtra(MainActivity.EXTRA_SUBSCRIPTION_ID, subscription.id)
@@ -98,20 +100,14 @@ class NtfyWidgetProvider : AppWidgetProvider() {
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                         views.setOnClickPendingIntent(R.id.widget_message, pendingIntent)
-                    } else {
-                        views.setViewVisibility(R.id.widget_message, android.view.View.GONE)
-                        views.setViewVisibility(R.id.widget_empty_text, android.view.View.VISIBLE)
-                        views.setTextViewText(R.id.widget_empty_text, context.getString(R.string.widget_no_topic_selected))
                     }
                 }
 
-                // Updated time
                 val now = java.util.Date()
                 val timeStr = DateFormat.getTimeFormat(context).format(now)
                 views.setTextViewText(R.id.widget_updated, context.getString(R.string.widget_updated_format, timeStr))
             }
 
-            // Open app button
             val mainIntent = Intent(context, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }

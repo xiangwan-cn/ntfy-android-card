@@ -8,6 +8,5 @@
     android:widgetCategory="home_screen"
     android:initialLayout="@layout/widget_ntfy"
     android:updatePeriodMillis="900000"
-    android:configure="io.heckel.ntfy.widget.NtfyWidgetConfigureActivity"
     android:description="@string/widget_description"
     android:previewImage="@drawable/ic_notification" />

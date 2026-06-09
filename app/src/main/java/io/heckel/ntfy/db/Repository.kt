@@ -549,7 +549,7 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
     }
 
     fun setWidgetSubscriptionId(appWidgetId: Int, subscriptionId: Long) {
-        sharedPrefs.edit {
+        sharedPrefs.edit(commit = true) {
             putLong("${SHARED_PREFS_WIDGET_SUB}_$appWidgetId", subscriptionId)
         }
     }
