@@ -72,6 +72,44 @@
         android:gravity="center"
         android:paddingBottom="8dp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_configure_text_color"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="?android:attr/textColorPrimary"
+        android:paddingBottom="4dp" />
+
+    <RadioGroup
+        android:id="@+id/widget_text_color_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:checkedButton="@+id/widget_text_color_white">
+
+        <RadioButton
+            android:id="@+id/widget_text_color_white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="White" />
+
+        <RadioButton
+            android:id="@+id/widget_text_color_light"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Light Gray" />
+
+        <RadioButton
+            android:id="@+id/widget_text_color_dark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Dark" />
+    </RadioGroup>
+
     <ListView
         android:id="@+id/widget_configure_list"
         android:layout_width="match_parent"

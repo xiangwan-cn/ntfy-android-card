@@ -564,6 +564,16 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         }
     }
 
+    fun getWidgetTextColor(appWidgetId: Int): String {
+        return sharedPrefs.getString("${SHARED_PREFS_WIDGET_TEXT_COLOR}_$appWidgetId", "#FFFFFF") ?: "#FFFFFF"
+    }
+
+    fun setWidgetTextColor(appWidgetId: Int, colorHex: String) {
+        sharedPrefs.edit(commit = true) {
+            putString("${SHARED_PREFS_WIDGET_TEXT_COLOR}_$appWidgetId", colorHex)
+        }
+    }
+
     private fun toSubscriptionList(list: List<SubscriptionWithMetadata>): List<Subscription> {
         return list.map { s ->
             mapSubscriptionWithMetadata(s, connectionDetails[s.baseUrl] ?: ConnectionDetails())
@@ -644,6 +654,7 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         const val SHARED_PREFS_LAST_TOPICS = "LastTopics"
         const val SHARED_PREFS_WIDGET_SUB = "WidgetSubscriptionId"
         const val SHARED_PREFS_WIDGET_ALPHA = "WidgetAlpha"
+        const val SHARED_PREFS_WIDGET_TEXT_COLOR = "WidgetTextColor"
 
         private const val LAST_TOPICS_COUNT = 3
 

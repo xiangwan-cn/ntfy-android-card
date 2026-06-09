@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="6dp">
+    android:padding="10dp"
+    android:background="@drawable/widget_background">
 
     <LinearLayout
         android:id="@+id/widget_header"
@@ -12,13 +13,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingBottom="2dp">
+        android:paddingBottom="4dp">
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/ic_notification"
-            android:tint="?android:attr/textColorSecondary" />
+            android:tint="#FFFFFF" />
 
         <TextView
             android:id="@+id/widget_title"
@@ -29,7 +30,7 @@
             android:text="ntfy"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="#FFFFFF"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:textColor="#99FFFFFF" />
     </LinearLayout>
 
     <TextView
@@ -49,7 +50,7 @@
         android:layout_weight="1"
         android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="#FFFFFF"
         android:gravity="top"
         android:visibility="gone" />
 
@@ -60,7 +61,7 @@
         android:layout_weight="1"
         android:text="@string/widget_no_topic_selected"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="#99FFFFFF"
         android:gravity="center" />
 
     <TextView
@@ -69,7 +70,7 @@
         android:layout_height="wrap_content"
         android:text="@string/widget_open_ntfy"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="#99FFFFFF"
         android:gravity="center"
-        android:paddingTop="2dp" />
+        android:paddingTop="4dp" />
 </LinearLayout>

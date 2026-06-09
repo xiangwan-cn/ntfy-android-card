@@ -576,4 +576,5 @@
     <string name="widget_configure_hint">Select which subscription to display in this widget</string>
     <string name="widget_no_topic_selected">Tap here to select a topic</string>
     <string name="widget_configure_transparency">Background opacity</string>
+    <string name="widget_configure_text_color">Text color</string>
 </resources>

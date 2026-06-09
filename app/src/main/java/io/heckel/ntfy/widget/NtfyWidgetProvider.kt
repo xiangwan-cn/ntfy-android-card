@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.text.format.DateFormat
 import android.widget.RemoteViews
 import io.heckel.ntfy.R
@@ -34,8 +35,6 @@ class NtfyWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
-        private const val ACTION_CONFIGURE = "io.heckel.ntfy.WIDGET_CONFIGURE"
-
         fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
             val repository = Repository.getInstance(context)
             val views = RemoteViews(context.packageName, R.layout.widget_ntfy)
@@ -43,19 +42,29 @@ class NtfyWidgetProvider : AppWidgetProvider() {
 
             kotlinx.coroutines.runBlocking {
                 val subId = repository.getWidgetSubscriptionId(appWidgetId)
-                val alpha = repository.getWidgetTransparency(appWidgetId)
-                val bgColor = android.graphics.Color.argb(alpha * 255 / 100, 0, 0, 0)
-                views.setInt(R.id.widget_root, "setBackgroundColor", bgColor)
+                val textColorHex = repository.getWidgetTextColor(appWidgetId)
+                val textColor = Color.parseColor(textColorHex)
+                val secondaryColor = Color.argb(
+                    (Color.alpha(textColor) * 0.6f).toInt(),
+                    Color.red(textColor),
+                    Color.green(textColor),
+                    Color.blue(textColor)
+                )
+
+                // Set text colors explicitly (theme attrs don't work in RemoteViews)
+                views.setTextColor(R.id.widget_title, textColor)
+                views.setTextColor(R.id.widget_message, textColor)
+                views.setTextColor(R.id.widget_empty_text, secondaryColor)
+                views.setTextColor(R.id.widget_updated, secondaryColor)
+                views.setTextColor(R.id.widget_open_app, secondaryColor)
 
                 if (subId == 0L) {
-                    // No topic selected — show hint, tap to configure
                     views.setViewVisibility(R.id.widget_message, android.view.View.GONE)
                     views.setViewVisibility(R.id.widget_empty_text, android.view.View.VISIBLE)
                     views.setTextViewText(R.id.widget_empty_text, context.getString(R.string.widget_no_topic_selected))
 
                     val configIntent = Intent(context, NtfyWidgetConfigureActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        action = ACTION_CONFIGURE
                         putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                     }
                     val configPendingIntent = PendingIntent.getActivity(

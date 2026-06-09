@@ -2,12 +2,16 @@ package io.heckel.ntfy.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.CompoundButtonCompat
 import io.heckel.ntfy.R
 import io.heckel.ntfy.db.Repository
 import io.heckel.ntfy.util.displayName
@@ -19,6 +23,7 @@ class NtfyWidgetConfigureActivity : AppCompatActivity() {
     private lateinit var repository: Repository
     private lateinit var appBaseUrl: String
     private var transparency = 15
+    private var textColorHex = "#FFFFFF"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +41,7 @@ class NtfyWidgetConfigureActivity : AppCompatActivity() {
         val listView = findViewById<ListView>(R.id.widget_configure_list)
         val seekBar = findViewById<SeekBar>(R.id.widget_transparency_seekbar)
         val label = findViewById<TextView>(R.id.widget_transparency_label)
+        val textColorGroup = findViewById<RadioGroup>(R.id.widget_text_color_group)
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(s: SeekBar, p: Int, fromUser: Boolean) {
@@ -45,6 +51,28 @@ class NtfyWidgetConfigureActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(s: SeekBar) {}
             override fun onStopTrackingTouch(s: SeekBar) {}
         })
+
+        textColorGroup.setOnCheckedChangeListener { _, checkedId ->
+            textColorHex = when (checkedId) {
+                R.id.widget_text_color_white -> "#FFFFFF"
+                R.id.widget_text_color_light -> "#CCCCCC"
+                R.id.widget_text_color_dark -> "#333333"
+                else -> "#FFFFFF"
+            }
+        }
+
+        CompoundButtonCompat.setButtonTintList(
+            findViewById(R.id.widget_text_color_white),
+            ColorStateList.valueOf(Color.WHITE)
+        )
+        CompoundButtonCompat.setButtonTintList(
+            findViewById(R.id.widget_text_color_light),
+            ColorStateList.valueOf(Color.parseColor("#CCCCCC"))
+        )
+        CompoundButtonCompat.setButtonTintList(
+            findViewById(R.id.widget_text_color_dark),
+            ColorStateList.valueOf(Color.parseColor("#333333"))
+        )
 
         Executors.newSingleThreadExecutor().execute {
             val subscriptions = kotlinx.coroutines.runBlocking { repository.getSubscriptions() }
@@ -60,6 +88,7 @@ class NtfyWidgetConfigureActivity : AppCompatActivity() {
                     val sub = subscriptions[position]
                     repository.setWidgetSubscriptionId(appWidgetId, sub.id)
                     repository.setWidgetTransparency(appWidgetId, transparency)
+                    repository.setWidgetTextColor(appWidgetId, textColorHex)
                     updateWidgetAndFinish()
                 }
             }
