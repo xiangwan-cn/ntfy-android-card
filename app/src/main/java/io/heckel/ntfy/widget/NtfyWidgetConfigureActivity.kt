@@ -1,6 +1,5 @@
 package io.heckel.ntfy.widget
 
-import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
@@ -10,9 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.heckel.ntfy.R
 import io.heckel.ntfy.db.Repository
 import io.heckel.ntfy.util.displayName
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import java.util.concurrent.Executors
 
 class NtfyWidgetConfigureActivity : AppCompatActivity() {
 
@@ -24,12 +21,9 @@ class NtfyWidgetConfigureActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_widget_configure)
 
-        appWidgetId = intent?.extras?.getInt(
-            AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID
-        ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            setResult(RESULT_CANCELED)
             finish()
             return
         }
@@ -39,7 +33,7 @@ class NtfyWidgetConfigureActivity : AppCompatActivity() {
 
         val listView = findViewById<ListView>(R.id.widget_configure_list)
 
-        GlobalScope.launch(Dispatchers.IO) {
+        Executors.newSingleThreadExecutor().execute {
             val subscriptions = repository.getSubscriptions()
             val labels = subscriptions.map { sub ->
                 "${displayName(appBaseUrl, sub)}  (${sub.totalCount})"
@@ -56,16 +50,29 @@ class NtfyWidgetConfigureActivity : AppCompatActivity() {
                 listView.setOnItemClickListener { _, _, position, _ ->
                     val sub = subscriptions[position]
                     repository.setWidgetSubscriptionId(appWidgetId, sub.id)
-
-                    val appWidgetManager = AppWidgetManager.getInstance(this@NtfyWidgetConfigureActivity)
-                    NtfyWidgetProvider.updateAppWidget(this@NtfyWidgetConfigureActivity, appWidgetManager, appWidgetId)
-
-                    val resultValue = Intent()
-                    resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                    setResult(RESULT_OK, resultValue)
-                    finish()
+                    updateWidgetAndFinish(sub.id)
                 }
             }
         }
+    }
+
+    private fun updateWidgetAndFinish(subId: Long) {
+        Thread {
+            val appWidgetManager = AppWidgetManager.getInstance(this)
+            NtfyWidgetProvider.updateAppWidget(this, appWidgetManager, appWidgetId)
+
+            runOnUiThread {
+                val resultValue = Intent().apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                }
+                setResult(RESULT_OK, resultValue)
+                finish()
+            }
+        }.start()
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, 0)
     }
 }

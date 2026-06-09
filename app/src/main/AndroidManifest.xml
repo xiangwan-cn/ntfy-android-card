@@ -206,11 +206,8 @@
         <activity
             android:name=".widget.NtfyWidgetConfigureActivity"
             android:exported="true"
-            android:theme="@style/Theme.App.FullScreenDialog">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
 
         <meta-data
                 android:name="firebase_analytics_collection_enabled"
