@@ -35,6 +35,18 @@ class NtfyWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
+        fun refreshWidgets(context: Context) {
+            android.os.Handler(context.mainLooper).post {
+                val appWidgetManager = AppWidgetManager.getInstance(context)
+                val widgetIds = appWidgetManager.getAppWidgetIds(
+                    android.content.ComponentName(context, NtfyWidgetProvider::class.java)
+                )
+                for (widgetId in widgetIds) {
+                    updateAppWidget(context, appWidgetManager, widgetId)
+                }
+            }
+        }
+
         fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
             val repository = Repository.getInstance(context)
             val views = RemoteViews(context.packageName, R.layout.widget_ntfy)

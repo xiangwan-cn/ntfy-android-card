@@ -8,6 +8,7 @@ import io.heckel.ntfy.up.Distributor
 import io.heckel.ntfy.util.Log
 import io.heckel.ntfy.util.decodeBytesMessage
 import io.heckel.ntfy.util.safeLet
+import io.heckel.ntfy.widget.NtfyWidgetProvider
 
 /**
  * The notification dispatcher figures out what to do with a notification.
@@ -51,6 +52,11 @@ class NotificationDispatcher(val context: Context, val repository: Repository) {
             DownloadManager.enqueue(context, notification.id, userAction = false, type = DownloadType.ATTACHMENT)
         } else if (downloadIcon) {
             DownloadManager.enqueue(context, notification.id, userAction = false, type = DownloadType.ICON)
+        }
+
+        // Refresh widget after new notification
+        if (notification.event == ApiService.EVENT_MESSAGE && !cancel) {
+            NtfyWidgetProvider.refreshWidgets(context)
         }
     }
 
