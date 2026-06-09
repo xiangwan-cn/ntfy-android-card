@@ -544,6 +544,16 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         }
     }
 
+    fun getWidgetSubscriptionId(appWidgetId: Int): Long {
+        return sharedPrefs.getLong("${SHARED_PREFS_WIDGET_SUB}_$appWidgetId", 0L)
+    }
+
+    fun setWidgetSubscriptionId(appWidgetId: Int, subscriptionId: Long) {
+        sharedPrefs.edit {
+            putLong("${SHARED_PREFS_WIDGET_SUB}_$appWidgetId", subscriptionId)
+        }
+    }
+
     private fun toSubscriptionList(list: List<SubscriptionWithMetadata>): List<Subscription> {
         return list.map { s ->
             mapSubscriptionWithMetadata(s, connectionDetails[s.baseUrl] ?: ConnectionDetails())
@@ -622,6 +632,7 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         const val SHARED_PREFS_CONNECTION_ALERT_SECONDS = "ConnectionAlertSeconds"
         const val SHARED_PREFS_CONNECTION_ALERT_SNOOZE_UNTIL_TIME = "ConnectionAlertSnoozeUntilTime" // Timestamp in millis
         const val SHARED_PREFS_LAST_TOPICS = "LastTopics"
+        const val SHARED_PREFS_WIDGET_SUB = "WidgetSubscriptionId"
 
         private const val LAST_TOPICS_COUNT = 3
 

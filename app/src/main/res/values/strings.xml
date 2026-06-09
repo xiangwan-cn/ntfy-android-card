@@ -572,4 +572,7 @@
     <string name="widget_no_notifications">No recent notifications</string>
     <string name="widget_open_ntfy">Open ntfy</string>
     <string name="widget_updated_format">updated %1$s</string>
+    <string name="widget_configure_title">Choose a topic</string>
+    <string name="widget_configure_hint">Select which subscription to display in this widget</string>
+    <string name="widget_no_topic_selected">Tap here to select a topic</string>
 </resources>

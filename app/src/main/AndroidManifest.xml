@@ -202,6 +202,16 @@
                 android:resource="@xml/ntfy_widget_info" />
         </receiver>
 
+        <!-- Widget configuration activity -->
+        <activity
+            android:name=".widget.NtfyWidgetConfigureActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.FullScreenDialog">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <meta-data
                 android:name="firebase_analytics_collection_enabled"
                 android:value="false"/>
