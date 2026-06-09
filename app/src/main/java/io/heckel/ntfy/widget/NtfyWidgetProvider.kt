@@ -36,11 +36,12 @@ class NtfyWidgetProvider : AppWidgetProvider() {
 
     companion object {
         fun refreshWidgets(context: Context) {
-            android.os.Handler(context.mainLooper).post {
-                val appWidgetManager = AppWidgetManager.getInstance(context)
-                val widgetIds = appWidgetManager.getAppWidgetIds(
-                    android.content.ComponentName(context, NtfyWidgetProvider::class.java)
-                )
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val widgetIds = appWidgetManager.getAppWidgetIds(
+                android.content.ComponentName(context, NtfyWidgetProvider::class.java)
+            )
+            if (widgetIds.isEmpty()) return
+            kotlinx.coroutines.runBlocking {
                 for (widgetId in widgetIds) {
                     updateAppWidget(context, appWidgetManager, widgetId)
                 }
