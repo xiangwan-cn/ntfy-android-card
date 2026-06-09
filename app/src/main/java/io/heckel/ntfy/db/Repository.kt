@@ -555,11 +555,6 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         return mapSubscriptionWithMetadata(s, connectionDetails[s.baseUrl] ?: ConnectionDetails())
     }
 
-    internal fun toSubscription(s: SubscriptionWithMetadata?): Subscription? {
-        if (s == null) return null
-        return mapSubscriptionWithMetadata(s, connectionDetails[s.baseUrl] ?: ConnectionDetails())
-    }
-
     fun updateConnectionDetails(baseUrl: String, state: ConnectionState, error: Throwable? = null, nextRetryTime: Long = 0L) {
         val current = connectionDetails[baseUrl]
         val firstErrorTime = when {
