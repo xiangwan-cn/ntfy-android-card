@@ -34,7 +34,9 @@ class NtfyWidgetConfigureActivity : AppCompatActivity() {
         val listView = findViewById<ListView>(R.id.widget_configure_list)
 
         Executors.newSingleThreadExecutor().execute {
-            val subscriptions = repository.getSubscriptions()
+            val subscriptions = kotlinx.coroutines.runBlocking {
+                repository.getSubscriptions()
+            }
             val labels = subscriptions.map { sub ->
                 "${displayName(appBaseUrl, sub)}  (${sub.totalCount})"
             }
