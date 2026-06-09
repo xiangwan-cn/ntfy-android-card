@@ -1,7 +1,6 @@
 package io.heckel.ntfy.ui
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -80,6 +79,8 @@ class MainAdapter(
         private val notificationDisabledForeverImageView: View = itemView.findViewById(R.id.main_item_notification_disabled_forever_image)
         private val instantImageView: View = itemView.findViewById(R.id.main_item_instant_image)
         private val newItemsView: TextView = itemView.findViewById(R.id.main_item_new)
+        private val titlePreviewView: TextView = itemView.findViewById(R.id.main_item_title_preview)
+        private val messagePreviewView: TextView = itemView.findViewById(R.id.main_item_message_preview)
         private val appBaseUrl = context.getString(R.string.app_base_url)
 
         fun bind(subscription: Subscription) {
@@ -133,12 +134,29 @@ class MainAdapter(
                 newItemsView.setTextColor(onPrimaryColor)
                 newItemsView.background = countDrawable
             }
+            // Latest notification title preview
+            if (subscription.latestTitle != null) {
+                titlePreviewView.text = subscription.latestTitle
+                titlePreviewView.visibility = View.VISIBLE
+            } else {
+                titlePreviewView.visibility = View.GONE
+            }
+            // Latest notification message preview
+            if (subscription.latestMessage != null) {
+                messagePreviewView.text = subscription.latestMessage
+                messagePreviewView.visibility = View.VISIBLE
+            } else {
+                messagePreviewView.visibility = View.GONE
+            }
             itemView.setOnClickListener { onClick(subscription) }
             itemView.setOnLongClickListener { onLongClick(subscription); true }
             if (selected.contains(subscription.id)) {
-                itemView.setBackgroundColor(Colors.itemSelectedBackground(context))
+                (itemView as com.google.android.material.card.MaterialCardView).setCardBackgroundColor(Colors.cardSelectedBackgroundColor(context))
             } else {
-                itemView.setBackgroundColor(Color.TRANSPARENT)
+                // Let card use its default theme color
+                (itemView as com.google.android.material.card.MaterialCardView).setCardBackgroundColor(
+                    Colors.cardBackgroundColor(context)
+                )
             }
         }
     }

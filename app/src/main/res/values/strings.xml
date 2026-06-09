@@ -566,4 +566,10 @@
     <string name="client_certificate_dialog_error_wrong_password">Wrong password or invalid PKCS#12 file</string>
     <string name="client_certificate_dialog_error_invalid_p12_password">Invalid password or corrupted PKCS#12 file</string>
     <string name="client_certificate_dialog_error_invalid_url">Invalid service URL</string>
+
+    <!-- Widget -->
+    <string name="widget_description">Display latest notifications from your ntfy topics</string>
+    <string name="widget_no_notifications">No recent notifications</string>
+    <string name="widget_open_ntfy">Open ntfy</string>
+    <string name="widget_updated_format">updated %1$s</string>
 </resources>

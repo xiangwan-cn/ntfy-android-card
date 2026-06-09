@@ -546,53 +546,18 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
 
     private fun toSubscriptionList(list: List<SubscriptionWithMetadata>): List<Subscription> {
         return list.map { s ->
-            Subscription(
-                id = s.id,
-                baseUrl = s.baseUrl,
-                topic = s.topic,
-                instant = s.instant,
-                dedicatedChannels = s.dedicatedChannels,
-                mutedUntil = s.mutedUntil,
-                minPriority = s.minPriority,
-                autoDelete = s.autoDelete,
-                insistent = s.insistent,
-                lastNotificationId = s.lastNotificationId,
-                icon = s.icon,
-                upAppId = s.upAppId,
-                upConnectorToken = s.upConnectorToken,
-                displayName = s.displayName,
-                totalCount = s.totalCount,
-                newCount = s.newCount,
-                lastActive = s.lastActive,
-                connectionDetails = connectionDetails[s.baseUrl] ?: ConnectionDetails()
-            )
+            mapSubscriptionWithMetadata(s, connectionDetails[s.baseUrl] ?: ConnectionDetails())
         }
     }
 
-    private fun toSubscription(s: SubscriptionWithMetadata?): Subscription? {
-        if (s == null) {
-            return null
-        }
-        return Subscription(
-            id = s.id,
-            baseUrl = s.baseUrl,
-            topic = s.topic,
-            instant = s.instant,
-            dedicatedChannels = s.dedicatedChannels,
-            mutedUntil = s.mutedUntil,
-            minPriority = s.minPriority,
-            autoDelete = s.autoDelete,
-            insistent = s.insistent,
-            lastNotificationId = s.lastNotificationId,
-            icon = s.icon,
-            upAppId = s.upAppId,
-            upConnectorToken = s.upConnectorToken,
-            displayName = s.displayName,
-            totalCount = s.totalCount,
-            newCount = s.newCount,
-            lastActive = s.lastActive,
-            connectionDetails = connectionDetails[s.baseUrl] ?: ConnectionDetails()
-        )
+    internal fun toSubscription(s: SubscriptionWithMetadata?): Subscription? {
+        if (s == null) return null
+        return mapSubscriptionWithMetadata(s, connectionDetails[s.baseUrl] ?: ConnectionDetails())
+    }
+
+    internal fun toSubscription(s: SubscriptionWithMetadata?): Subscription? {
+        if (s == null) return null
+        return mapSubscriptionWithMetadata(s, connectionDetails[s.baseUrl] ?: ConnectionDetails())
     }
 
     fun updateConnectionDetails(baseUrl: String, state: ConnectionState, error: Throwable? = null, nextRetryTime: Long = 0L) {
@@ -727,6 +692,31 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
                 instance = newInstance
                 newInstance
             }
+        }
+
+        fun mapSubscriptionWithMetadata(s: SubscriptionWithMetadata, details: ConnectionDetails = ConnectionDetails()): Subscription {
+            return Subscription(
+                id = s.id,
+                baseUrl = s.baseUrl,
+                topic = s.topic,
+                instant = s.instant,
+                dedicatedChannels = s.dedicatedChannels,
+                mutedUntil = s.mutedUntil,
+                minPriority = s.minPriority,
+                autoDelete = s.autoDelete,
+                insistent = s.insistent,
+                lastNotificationId = s.lastNotificationId,
+                icon = s.icon,
+                upAppId = s.upAppId,
+                upConnectorToken = s.upConnectorToken,
+                displayName = s.displayName,
+                totalCount = s.totalCount,
+                newCount = s.newCount,
+                lastActive = s.lastActive,
+                connectionDetails = details,
+                latestTitle = s.latestTitle?.takeIf { it.isNotEmpty() },
+                latestMessage = s.latestMessage?.takeIf { it.isNotEmpty() }
+            )
         }
     }
 }

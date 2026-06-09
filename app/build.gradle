@@ -146,4 +146,8 @@ dependencies {
     // Used by Markdown library, R8 complains if these are not here
     implementation "pl.droidsonroids.gif:android-gif-drawable:1.2.31"
     implementation "com.caverock:androidsvg:1.4"
+
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "androidx.room:room-testing:$room_version"
 }
