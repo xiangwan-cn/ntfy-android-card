@@ -11,7 +11,7 @@
         android:text="@string/widget_configure_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="?android:attr/textColorPrimary"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="4dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -19,7 +19,58 @@
         android:text="@string/widget_configure_hint"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="?android:attr/textColorSecondary"
-        android:paddingBottom="12dp" />
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_configure_transparency"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="?android:attr/textColorPrimary"
+        android:paddingBottom="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:text="透明"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <SeekBar
+            android:id="@+id/widget_transparency_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:max="100"
+            android:progress="15"
+            android:min="0" />
+
+        <TextView
+            android:text="不透明"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="?android:attr/textColorSecondary" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_transparency_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="15%"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="?android:attr/textColorSecondary"
+        android:gravity="center"
+        android:paddingBottom="8dp" />
 
     <ListView
         android:id="@+id/widget_configure_list"

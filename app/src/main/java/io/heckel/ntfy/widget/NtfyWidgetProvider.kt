@@ -43,6 +43,9 @@ class NtfyWidgetProvider : AppWidgetProvider() {
 
             kotlinx.coroutines.runBlocking {
                 val subId = repository.getWidgetSubscriptionId(appWidgetId)
+                val alpha = repository.getWidgetTransparency(appWidgetId)
+                val bgColor = android.graphics.Color.argb(alpha * 255 / 100, 0, 0, 0)
+                views.setInt(R.id.widget_root, "setBackgroundColor", bgColor)
 
                 if (subId == 0L) {
                     // No topic selected — show hint, tap to configure

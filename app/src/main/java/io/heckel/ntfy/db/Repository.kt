@@ -554,6 +554,16 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         }
     }
 
+    fun getWidgetTransparency(appWidgetId: Int): Int {
+        return sharedPrefs.getInt("${SHARED_PREFS_WIDGET_ALPHA}_$appWidgetId", 15)
+    }
+
+    fun setWidgetTransparency(appWidgetId: Int, percent: Int) {
+        sharedPrefs.edit(commit = true) {
+            putInt("${SHARED_PREFS_WIDGET_ALPHA}_$appWidgetId", percent)
+        }
+    }
+
     private fun toSubscriptionList(list: List<SubscriptionWithMetadata>): List<Subscription> {
         return list.map { s ->
             mapSubscriptionWithMetadata(s, connectionDetails[s.baseUrl] ?: ConnectionDetails())
@@ -633,6 +643,7 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         const val SHARED_PREFS_CONNECTION_ALERT_SNOOZE_UNTIL_TIME = "ConnectionAlertSnoozeUntilTime" // Timestamp in millis
         const val SHARED_PREFS_LAST_TOPICS = "LastTopics"
         const val SHARED_PREFS_WIDGET_SUB = "WidgetSubscriptionId"
+        const val SHARED_PREFS_WIDGET_ALPHA = "WidgetAlpha"
 
         private const val LAST_TOPICS_COUNT = 3
 
